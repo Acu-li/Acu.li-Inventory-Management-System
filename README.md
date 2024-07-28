@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/Fischherboot/Aculi/main/watermark-no-bg.png" alt="download.png" width="200" />
+
 # Aculi Inventory Management System (Aculi IMS)
 
 Aculi IMS is a web-based inventory management system designed to help you track and manage your devices efficiently. This system is built using Flask and Docker to ensure easy deployment and scalability.
