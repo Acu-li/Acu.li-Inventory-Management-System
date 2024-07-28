@@ -20,8 +20,8 @@ Aculi IMS is a web-based inventory management system designed to help you track 
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/yourusername/aculi-ims.git
-    cd aculi-ims
+    git clone https://github.com/Acu-li/Acu.li-Inventory-Management-System.git
+    cd Acu.li-Inventory-Management-System
     ```
     
 2. **Build and run the application using Docker Compose:**
