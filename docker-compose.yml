@@ -1,0 +1,11 @@
+version: '3'
+services:
+  myapp:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - devices-data:/app/devices
+
+volumes:
+  devices-data:

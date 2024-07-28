@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acu.li IMS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('static/background-web.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #ddd;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1;
+        }
+        .navbar img {
+            height: 40px;
+        }
+        .navbar .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .navbar a {
+            color: #A46EBC;
+            text-decoration: none;
+            padding: 14px 20px;
+            text-align: center;
+        }
+        .navbar a:hover {
+            background-color: #A46EBC;
+            color: black;
+        }
+        .content {
+            display: flex;
+            flex-grow: 1;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem;
+            overflow-y: auto;
+            margin-top: 80px;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .form-container, .device-grid {
+            background-color: #333;
+            border: 2px solid #A46EBC;
+            border-radius: 10px;
+            padding: 2rem;
+            box-sizing: border-box;
+            color: #ddd;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .form-header {
+            text-align: center;
+            background-color: #444;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .form-header:hover {
+            background-color: #555;
+        }
+        .form-container form {
+            display: none;
+        }
+        .form-container input, .form-container button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #A46EBC;
+            border-radius: 5px;
+            background-color: #444;
+            color: #ddd;
+        }
+        .form-container button {
+            background-color: #A46EBC;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #834f9a;
+        }
+        .device-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            width: 100%;
+        }
+        .device-card {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: transform 0.2s;
+            background-color: #444;
+            text-align: center;
+        }
+        .device-card:hover {
+            transform: scale(1.05);
+            cursor: pointer;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #333;
+            border: 2px solid #A46EBC;
+            padding: 20px;
+            z-index: 10;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+        }
+        .popup .close-btn {
+            float: right;
+            cursor: pointer;
+            background-color: #A46EBC;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .popup .close-btn:hover {
+            background-color: #834f9a;
+        }
+        .popup-content {
+            margin-top: 20px;
+        }
+        .popup .delete-btn {
+            background-color: #A46EBC;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            color: #ddd;
+            cursor: pointer;
+        }
+        .popup .delete-btn:hover {
+            background-color: #834f9a;
+        }
+        .popup label {
+            color: #A46EBC;
+        }
+        .footer {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 10px;
+        }
+        .footer a {
+            color: #A46EBC;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <img src="static/logo-no-bg3.png" alt="Kleines Logo">
+        <div class="nav-links">
+            <a href="#">Welcome to the Acu.li Inventory Management System</a>
+        </div>
+    </div>
+    <div class="content">
+        <div class="form-container">
+            <div class="form-header" onclick="toggleForm()">Add Device</div>
+            <form id="device-form">
+                <label for="device-name">Device Name:</label>
+                <input type="text" id="device-name" name="device-name" required>
+                <label for="device-local-ip">Local IP:</label>
+                <input type="text" id="device-local-ip" name="device-local-ip">
+                <label for="device-public-ip">Public IP:</label>
+                <input type="text" id="device-public-ip" name="device-public-ip">
+                <label for="device-cloudflared-tunnel">Cloudflare Tunnel Name:</label>
+                <input type="text" id="device-cloudflared-tunnel" name="device-cloudflared-tunnel">
+                <label for="device-use-case">Use Case:</label>
+                <input type="text" id="device-use-case" name="device-use-case">
+                <label for="device-existing-since">Existing Since:</label>
+                <input type="text" id="device-existing-since" name="device-existing-since">
+                <label for="device-location">Location:</label>
+                <input type="text" id="device-location" name="device-location">
+                <label for="device-owner">Owner:</label>
+                <input type="text" id="device-owner" name="device-owner">
+                <button type="submit">Add Device</button>
+            </form>
+        </div>
+        <div id="device-list" class="device-grid"></div>
+        <div id="device-details" class="popup">
+            <button class="close-btn" onclick="closePopup()">Close</button>
+            <div class="popup-content" id="popup-content"></div>
+            <button class="delete-btn" onclick="deleteDevice()">Delete Device</button>
+            <label>
+                <input type="checkbox" id="confirm-delete"> I know what I'm doing
+            </label>
+        </div>
+    </div>
+    <div class="footer">
+        <a href="https://github.com/Acu-li"><img src="static/gh-logo.png" alt="Icon 1" width="30" height="30"></a>
+        <a href="https://huggingface.co/Aculi"><img src="static/hf-logo.png" alt="Icon 2" width="30" height="30"></a>
+        <a href="https://www.youtube.com/channel/UC8WSGlFI4fjdqKpGhrl6pDA"><img src="static/yt-logo.png" alt="Icon 3" width="30" height="30"></a>
+    </div>
+    <script>
+        document.getElementById('device-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('device-name').value;
+            const local_ip = document.getElementById('device-local-ip').value;
+            const public_ip = document.getElementById('device-public-ip').value;
+            const cloudflared_tunnel = document.getElementById('device-cloudflared-tunnel').value;
+            const use_case = document.getElementById('device-use-case').value;
+            const existing_since = document.getElementById('device-existing-since').value;
+            const location = document.getElementById('device-location').value;
+            const owner = document.getElementById('device-owner').value;
+
+            const response = await fetch('/api/add_device', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, local_ip, public_ip, cloudflared_tunnel, use_case, existing_since, location, owner }),
+            });
+
+            if (response.ok) {
+                alert('Device added successfully!');
+                loadDevices();
+                document.getElementById('device-form').reset();
+                toggleForm(); // Hide the form after submission
+            } else {
+                alert('Failed to add device.');
+            }
+        });
+
+        async function loadDevices() {
+            const response = await fetch('/api/devices');
+            const devices = await response.json();
+            const deviceList = document.getElementById('device-list');
+            deviceList.innerHTML = '';
+            devices.forEach(device => {
+                const card = document.createElement('div');
+                card.className = 'device-card';
+                card.textContent = device.name;
+                card.onclick = () => showDetails(device);
+                deviceList.appendChild(card);
+            });
+        }
+
+        function toggleForm() {
+            const form = document.getElementById('device-form');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function showDetails(device) {
+            document.getElementById('popup-content').innerHTML = `
+                <p>Name: ${device.name}</p>
+                <p>Local IP: ${device.local_ip}</p>
+                <p>Public IP: ${device.public_ip}</p>
+                <p>Cloudflare Tunnel: ${device.cloudflared_tunnel}</p>
+                <p>Use Case: ${device.use_case}</p>
+                <p>Existing Since: ${device.existing_since}</p>
+                <p>Location: ${device.location}</p>
+                <p>Owner: ${device.owner}</p>
+            `;
+            document.getElementById('device-details').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('device-details').style.display = 'none';
+        }
+
+        async function deleteDevice() {
+            if (document.getElementById('confirm-delete').checked) {
+                const name = document.getElementById('popup-content').querySelector('p').textContent.split(': ')[1];
+                const response = await fetch(`/api/delete_device?name=${encodeURIComponent(name)}`, {
+                    method: 'DELETE',
+                });
+                if (response.ok) {
+                    alert('Device deleted successfully!');
+                    loadDevices();
+                    closePopup();
+                } else {
+                    alert('Failed to delete device.');
+                }
+            } else {
+                alert('Please confirm that you want to delete the device.');
+            }
+        }
+
+        loadDevices();
+    </script>
+</body>
+</html>
