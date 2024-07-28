@@ -8,7 +8,7 @@ Aculi IMS is a web-based inventory management system designed to help you track 
 
 - Add, view, and delete devices
 - Store device information to keep track of all devices in your collection.
-- ~~Persistent storage of device data using Docker volumes~~ (doesnt work idk what i did wrong, will get fixed in v2)
+- ~~Persistent storage of device data using Docker volumes~~ (Doesn't work, IDK what I did wrong. Will get fixed in v2.)
 - Nice looking web interface
 - All of that, contained in a single Docker container.
 
