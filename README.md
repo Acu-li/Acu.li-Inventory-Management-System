@@ -43,6 +43,10 @@ Aculi IMS is a web-based inventory management system designed to help you track 
 
 Feel free to submit issues or pull requests if you have suggestions for improvements or bug fixes.
 
+## License and Usage
+
+Feel free to fork this repository and rebrand the application as you wish. You are welcome to use, modify, and distribute the code in any way you see fit. Contributions to improve the project are always appreciated.
+
 ## Acknowledgements
 
 - Flask: A lightweight WSGI web application framework in Python.
